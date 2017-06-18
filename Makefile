@@ -4,6 +4,8 @@ RAW_DATA_DIRECTORY=build/data/raw
 EXPLORE_DATA_DIRECTORY=build/data/explore
 ANALYSIS_DATA_DIRECTORY=build/data/analysis
 
+all: generate_explore_dumb_features
+
 build_raw_data:
 ifeq ($(wildcard $(RAW_DATA_DIRECTORY)),)
 	echo "Extracting..."
@@ -40,6 +42,9 @@ ifeq ($(wildcard $(EXPLORE_DATA_DIRECTORY)),)
 else
 	echo "Files already in the explore directory..."
 endif
+
+generate_explore_dumb_features: build_explore_data
+	src/extractor.py -r dumb $(EXPLORE_DATA_DIRECTORY)
 
 clean:
 	rm -rf build/data/
