@@ -86,7 +86,7 @@ def main():
     print ("\n\nSaving dataset into '{}'".format(file_name))
 
     # saving...
-    df.to_csv(file_name)
+    df.to_csv(file_name, index = False)
 
 
 if __name__ == '__main__':
