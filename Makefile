@@ -44,7 +44,7 @@ else
 endif
 
 generate_explore_dumb_features: build_explore_data
-	src/extractor.py -r dumb $(EXPLORE_DATA_DIRECTORY)
+	src/extractor.py -sr dumb $(EXPLORE_DATA_DIRECTORY)
 
 clean:
 	rm -rf build/data/
