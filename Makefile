@@ -3,6 +3,7 @@ DATA=data/movie_review_dataset.zip
 RAW_DATA_DIRECTORY=build/data/raw
 EXPLORE_DATA_DIRECTORY=build/data/explore
 ANALYSIS_DATA_DIRECTORY=build/data/analysis
+EXPLORE_DATA_LEN=2500
 
 all: generate_explore_dumb_features
 
@@ -33,11 +34,11 @@ endif
 
 build_explore_data: build_raw_data
 ifeq ($(wildcard $(EXPLORE_DATA_DIRECTORY)),)
-	echo "Copying random 2500 raw files to build explore data..."
+	echo "Copying random $(EXPLORE_DATA_LEN) raw files to build explore data..."
 	mkdir -p $(EXPLORE_DATA_DIRECTORY)/neg
 	mkdir -p $(EXPLORE_DATA_DIRECTORY)/pos
-	ls $(RAW_DATA_DIRECTORY)/pos/* | shuf | head -n 2500 | xargs cp -t $(EXPLORE_DATA_DIRECTORY)/pos/
-	ls $(RAW_DATA_DIRECTORY)/neg/* | shuf | head -n 2500 | xargs cp -t $(EXPLORE_DATA_DIRECTORY)/neg/
+	ls $(RAW_DATA_DIRECTORY)/pos/* | shuf | head -n $(EXPLORE_DATA_LEN) | xargs cp -t $(EXPLORE_DATA_DIRECTORY)/pos/
+	ls $(RAW_DATA_DIRECTORY)/neg/* | shuf | head -n $(EXPLORE_DATA_LEN) | xargs cp -t $(EXPLORE_DATA_DIRECTORY)/neg/
 	echo "Explore data generated"
 else
 	echo "Files already in the explore directory..."
