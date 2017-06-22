@@ -9,6 +9,10 @@ from nltk.corpus import stopwords
 from nltk import PorterStemmer
 import string
 
+## New stuff!
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_extraction.text import TfidfVectorizer
+
 # Preprocess text
 def preprocess_text (text, options):
     # basic mandatory preprocess: remove html '<br />' and tokenize lower text removing punctuatuion
@@ -80,8 +84,23 @@ def main():
 
     args = parser.parse_args()
 
-    # Text array
-    text = []
+    vectorizer = TfidfVectorizer(input = 'filename', ngram_range = (1, 1))
+
+    # load data
+    positive_data = glob("{}/pos/*.txt".format(args.data_directory))
+    negative_data = glob("{}/neg/*.txt".format(args.data_directory))
+    # data length
+    len_positive = len(positive_data)
+    len_negative = len(negative_data)
+
+    # example labels
+    y = ([args.positive_label] * len_positive) + ([args.negative_label] * len_negative)
+
+    t = SelectKBest()
+    b = t.fit(result, y)
+    b.get_support() # mask array
+    res = tfidf.fit_transform(text, y)
+    np.array(res.get_feature_names())
 
     # Read examples and parse features
     for type in ["pos", "neg"]:
