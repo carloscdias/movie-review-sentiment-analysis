@@ -3,9 +3,9 @@ DATA=data/movie_review_dataset.zip
 RAW_DATA_DIRECTORY=build/data/raw
 EXPLORE_DATA_DIRECTORY=build/data/explore
 ANALYSIS_DATA_DIRECTORY=build/data/analysis
-EXPLORE_DATA_LEN=2500
+EXPLORE_DATA_LEN=5000
 
-all: generate_explore_dumb_features
+all: generate_explore_100_features
 
 build_raw_data:
 ifeq ($(wildcard $(RAW_DATA_DIRECTORY)),)
@@ -44,8 +44,8 @@ else
 	echo "Files already in the explore directory..."
 endif
 
-generate_explore_dumb_features: build_explore_data
-	src/extractor.py -sr dumb $(EXPLORE_DATA_DIRECTORY)
+generate_explore_100_features: build_explore_data
+	src/extractor.py -g 3 -f 100 $(EXPLORE_DATA_DIRECTORY)
 
 clean:
 	rm -rf build/data/
