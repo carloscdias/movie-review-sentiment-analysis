@@ -12,6 +12,7 @@ import string
 ## New stuff!
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_extraction.text import TfidfVectorizer
+import numpy as np
 
 # Preprocess text
 def preprocess_text (text, options):
@@ -81,49 +82,39 @@ def main():
     parser.add_argument("-r", "--remove-stopwords", action = 'store_true', help = "Remove common words in the englis vocabulary before processing")
     parser.add_argument("-s", "--stemmer", action = 'store_true', help = "Use Porter Stemmer to stem words")
     parser.add_argument("-o", "--remove-one-letter", action = 'store_true', help = "Remove one letter words")
+    parser.add_argument("-f", "--features", type = int, default = 10, help = "Number of features to extract")
 
     args = parser.parse_args()
 
-    vectorizer = TfidfVectorizer(input = 'filename', ngram_range = (1, 1))
+    vectorizer = TfidfVectorizer(input = 'filename', ngram_range = (1, 3))
 
     # load data
-    positive_data = glob("{}/pos/*.txt".format(args.data_directory))
-    negative_data = glob("{}/neg/*.txt".format(args.data_directory))
+    positive_data  = glob("{}/pos/*.txt".format(args.data_directory))
+    negative_data  = glob("{}/neg/*.txt".format(args.data_directory))
+    total_raw_data = positive_data + negative_data
     # data length
     len_positive = len(positive_data)
     len_negative = len(negative_data)
+    len_total    = len_positive + len_negative
 
     # example labels
     y = ([args.positive_label] * len_positive) + ([args.negative_label] * len_negative)
 
-    t = SelectKBest()
-    b = t.fit(result, y)
-    b.get_support() # mask array
-    res = tfidf.fit_transform(text, y)
-    np.array(res.get_feature_names())
+    # processed data
+    data = vectorizer.fit_transform(total_raw_data, y)
+    feature_names = np.array(vectorizer.get_feature_names())
 
-    # Read examples and parse features
-    for type in ["pos", "neg"]:
-        for file in glob("{}/{}/*.txt".format(args.data_directory, type)):
-            # Read file into text array
-            with open(file) as f:
-                text.append(f.read())
+    # build feature selector
+    feature_selector = SelectKBest(k = args.features)
+    clean_data       = feature_selector.fit_transform(data, y)
+    # get best K features
+    best_features = feature_names[feature_selector.get_support()]
 
-            # Put label
-            dataset['_result_label'].append (args.positive_label if type == 'pos' else args.negative_label)
-
-    # Extract features with the given method
-    tokens = []
-    for t in text:
-        tokens.append(preprocess_text (t, args))
-
-    extract_modes[args.method] (tokens, dataset)
-
-    for i in dataset.keys():
-        print("{} -> {}".format(i, len(dataset[i])))
+    # print best features
+    print(best_features)
 
     # Data set to data frame
-    df = pd.DataFrame(dataset)
+    df = pd.DataFrame(clean_data.toarray().tolist(), y)
 
     # Data preview
     print("\nPreview")
