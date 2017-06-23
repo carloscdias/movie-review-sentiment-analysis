@@ -6,6 +6,28 @@ import pandas as pd
 from sklearn.feature_selection import SelectKBest, chi2, f_classif, mutual_info_classif
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
+from nltk import word_tokenize
+from nltk.stem.porter import PorterStemmer
+
+stemmer = PorterStemmer()
+
+class StemmedTfIdfVectorizer(TfidfVectorizer):
+    def build_analyzer(self):
+        analyzer = super(StemmedTfIdfVectorizer, self).build_analyzer()
+        return lambda doc: ([stemmer.stem(w) for w in analyzer(doc)])
+
+# Extracted and adapted from: https://github.com/mkfs/misc-text-mining/blob/master/R/wordcloud.R
+def expand_contractions(doc):
+    # "won't" is a special case as it does not expand to "wo not"
+    doc = doc.replace("won't", "will not")
+    doc = doc.replace("n't", " not")
+    doc = doc.replace("'ll", " will")
+    doc = doc.replace("'re", " are")
+    doc = doc.replace("'ve", " have")
+    doc = doc.replace("'m", " am")
+    # 's could be 'is' or could be possessive: it has no expansion
+    doc = doc.replace("'s", "")
+    return doc
 
 # This program receives the method extractor and the data directory as params
 def main():
@@ -21,7 +43,11 @@ def main():
 
     args = parser.parse_args()
 
-    vectorizer = TfidfVectorizer(input = 'filename', ngram_range = (1, args.n_grams))
+    vectorizer = StemmedTfIdfVectorizer(input = 'filename', strip_accents = 'unicode',
+                                        #norm = None, use_idf = False,
+                                        analyzer = 'word',
+                                        preprocessor = expand_contractions, stop_words = 'english',
+                                        ngram_range = (1, args.n_grams))
 
     # load data
     positive_data  = glob("{}/pos/*.txt".format(args.data_directory))
