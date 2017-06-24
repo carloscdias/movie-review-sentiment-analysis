@@ -88,7 +88,7 @@ def main():
     print(df.describe())
 
     # save data
-    file_name = "{}/{}-features.csv".format(args.data_directory, args.features)
+    file_name = "{}/{}-{}-features.csv".format(args.data_directory, args.features, args.n_grams)
     print ("\n\nSaving dataset into '{}'".format(file_name))
 
     # saving...
