@@ -5,7 +5,7 @@ EXPLORE_DATA_DIRECTORY=build/data/explore
 ANALYSIS_DATA_DIRECTORY=build/data/analysis
 EXPLORE_DATA_LEN=5000
 
-all: generate_explore_100_features
+all: generate_25_unigram_features_dataset generate_50_unigram_features_dataset generate_25_bigram_features_dataset generate_50_bigram_features_dataset
 
 build_raw_data:
 ifeq ($(wildcard $(RAW_DATA_DIRECTORY)),)
@@ -44,8 +44,17 @@ else
 	echo "Files already in the explore directory..."
 endif
 
-generate_explore_100_features: build_explore_data
-	src/extractor.py -g 3 -f 100 $(EXPLORE_DATA_DIRECTORY)
+generate_25_unigram_features_dataset: build_raw_data
+	src/extractor.py -g 1 -f 25 $(RAW_DATA_DIRECTORY)
+
+generate_50_unigram_features_dataset: build_raw_data
+	src/extractor.py -g 1 -f 50 $(RAW_DATA_DIRECTORY)
+
+generate_25_bigram_features_dataset: build_raw_data
+	src/extractor.py -g 2 -f 25 $(RAW_DATA_DIRECTORY)
+
+generate_50_bigram_features_dataset: build_raw_data
+	src/extractor.py -g 2 -f 50 $(RAW_DATA_DIRECTORY)
 
 clean:
 	rm -rf build/data/
