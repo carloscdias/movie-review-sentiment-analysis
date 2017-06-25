@@ -8,6 +8,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 from nltk import word_tokenize
 from nltk.stem.porter import PorterStemmer
+from sklearn.model_selection import train_test_split
 
 stemmer = PorterStemmer()
 
@@ -40,6 +41,7 @@ def main():
 
     parser.add_argument("-f", "--features", type = int, default = 10, help = "Number of features to extract")
     parser.add_argument("-g", "--n-grams", type = int, default = 2, help = "N-Grams max range to extract")
+    parser.add_argument("-t", "--test-size", type = float, default = 0.10, help = "Test size in relation to total data")
 
     args = parser.parse_args()
 
@@ -70,29 +72,29 @@ def main():
     clean_data       = feature_selector.fit_transform(data, y)
 
     # get best K features
-    best_features = feature_names[feature_selector.get_support()]
+    best_features = feature_names[feature_selector.get_support()].tolist()
 
     # print best features
-    print(best_features)
+    print("Best features:\n{}".format(', '.join(best_features)))
+
+    # split data into train and test
+    train_X, test_X, train_Y, test_Y = train_test_split(clean_data.toarray(), y,
+                                                        test_size = args.test_size, random_state = 42)
 
     # Data set to data frame
-    df = pd.DataFrame(clean_data.toarray(), columns = best_features.tolist())
-    df = df.assign(label = y)
+    df = {}
+    df['train'] = pd.DataFrame(train_X, columns = best_features)
+    df['train'] = df['train'].assign(label = train_Y)
 
-    # Data preview
-    print("\nPreview")
-    print(df.head())
-
-    # describe data
-    print("\nStatistics")
-    print(df.describe())
+    df['test'] = pd.DataFrame(test_X, columns = best_features)
+    df['test'] = df['test'].assign(label = test_Y)
 
     # save data
-    file_name = "{}/{}-{}-features.csv".format(args.data_directory, args.features, args.n_grams)
-    print ("\n\nSaving dataset into '{}'".format(file_name))
-
-    # saving...
-    df.to_csv(file_name, index = False)
+    for key in df.keys():
+        file_name = "{}/{}-{}-{}-features.csv".format(args.data_directory, key, args.features, args.n_grams)
+        print ("\n\nSaving dataset into '{}'".format(file_name))
+        # saving...
+        df[key].to_csv(file_name, index = False)
 
 
 if __name__ == '__main__':
