@@ -1,1 +1,3 @@
 vectorizer_10k_features.pkl
+vectorizer_5k.pkl
+classifier_5k.pkl

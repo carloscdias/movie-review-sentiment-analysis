@@ -35,7 +35,7 @@ def main():
     parser = ArgumentParser(description = "This program evaluates a movie review based on the 200 feature svm extractor")
     parser.add_argument("review", help = "Movie review in text format")
 
-    parser.add_argument("-c", "--classifier", type = int, default = 1, choices = [0, 1], help = "Saved classifier to be used")
+    parser.add_argument("-c", "--classifier", type = int, default = 1, choices = [0, 1, 2], help = "Saved classifier to be used")
 
     options = [
         # 84.5867% accuracy
@@ -49,7 +49,13 @@ def main():
             'vectorizer': 'data/vectorizer_10k_features.pkl',
             'selector':   'data/selector_10k_features.pkl',
             'classifier': 'data/classifier_10k_features.pkl',
-        }
+        },
+        # 0.89239999999999997% accuracy
+        {
+            'vectorizer': 'data/vectorizer_5k.pkl',
+            'selector':   'data/selector_5k.pkl',
+            'classifier': 'data/classifier_5k.pkl',
+        },
     ]
 
     labels = {
