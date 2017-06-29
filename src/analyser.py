@@ -35,22 +35,48 @@ def main():
     parser = ArgumentParser(description = "This program evaluates a movie review based on the 200 feature svm extractor")
     parser.add_argument("review", help = "Movie review in text format")
 
+    parser.add_argument("-c", "--classifier", type = int, default = 1, choices = [0, 1], help = "Saved classifier to be used")
+
+    options = [
+        # 84.5867% accuracy
+        {
+            'vectorizer': 'data/vectorizer.pkl',
+            'selector':   'data/selector.pkl',
+            'classifier': 'data/classifier.pkl',
+        },
+        # 0.89559999999999995% accuracy
+        {
+            'vectorizer': 'data/vectorizer_10k_features.pkl',
+            'selector':   'data/selector_10k_features.pkl',
+            'classifier': 'data/classifier_10k_features.pkl',
+        }
+    ]
+
+    labels = {
+        'pos': 'Positive opinion',
+        'neg': 'Negative opinion'
+    }
+
     args = parser.parse_args()
 
     # load tf-idf vectorizer
-    vectorizer = joblib.load('data/vectorizer.pkl')
+    print("Loading TF-IDF vectorizer...")
+    vectorizer = joblib.load(options[args.classifier]['vectorizer'])
     vectorizer.set_params(input = 'content')
 
     # process data
     data = vectorizer.transform([args.review])
 
     # load feature selector
-    feature_selector = joblib.load('data/selector.pkl')
-    clean_data       = feature_selector.transform(data)
+    print("Loading feature selector...")
+    feature_selector = joblib.load(options[args.classifier]['selector'])
+    clean_data       = feature_selector.transform(data.toarray())
 
     # load SVM
-    svm_classifier = joblib.load('data/classifier.pkl')
-    print("Label: {}".format(svm_classifier.predict(clean_data)[0]))
+    print("Loading classifier...")
+    svm_classifier = joblib.load(options[args.classifier]['classifier'])
+    predicted      = svm_classifier.predict(clean_data)[0]
+    print("Label: {}".format(labels[predicted]))
 
 if __name__ == '__main__':
     main()
