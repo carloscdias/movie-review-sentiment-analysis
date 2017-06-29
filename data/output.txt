@@ -1,0 +1,37 @@
+src/extractor.py -g 1 -f 25 build/data/raw
+Best features:
+aw, bad, beauti, best, bore, crap, excel, favorit, great, horribl, lame, love, minut, money, perfect, poor, poorli, ridicul, stupid, suck, suppos, terribl, wast, wors, worst
+
+
+Saving dataset into 'build/data/raw/train-25-1-features.csv'
+
+
+Saving dataset into 'build/data/raw/test-25-1-features.csv'
+src/extractor.py -g 1 -f 50 build/data/raw
+Best features:
+amaz, annoy, avoid, aw, bad, badli, beauti, best, bore, brilliant, cheap, crap, dull, enjoy, excel, fail, fantast, favorit, garbag, great, highli, horribl, just, lame, laughabl, love, mess, minut, money, pathet, perfect, perform, plot, pointless, poor, poorli, redeem, ridicul, save, script, stupid, suck, superb, suppos, terribl, unless, wast, whi, wors, worst
+
+
+Saving dataset into 'build/data/raw/train-50-1-features.csv'
+
+
+Saving dataset into 'build/data/raw/test-50-1-features.csv'
+src/extractor.py -g 2 -f 25 build/data/raw
+Best features:
+aw, bad, bad movi, beauti, best, bore, crap, excel, favorit, great, horribl, lame, love, minut, perfect, poor, poorli, stupid, terribl, wast, waste tim, wors, worst, worst film, worst movi
+
+
+Saving dataset into 'build/data/raw/train-25-2-features.csv'
+
+
+Saving dataset into 'build/data/raw/test-25-2-features.csv'
+src/extractor.py -g 2 -f 50 build/data/raw
+Best features:
+10 10, amaz, annoy, avoid, aw, bad, bad act, bad movi, badli, beauti, best, bore, brilliant, cheap, crap, dull, enjoy, excel, fail, fantast, favorit, garbag, great, highly recommend, horribl, lame, laughabl, love, minut, money, pathet, perfect, plot, pointless, poor, poorli, ridicul, script, stupid, suck, superb, suppos, terribl, wast, waste tim, whi, wors, worst, worst film, worst movi
+
+
+Saving dataset into 'build/data/raw/train-50-2-features.csv'
+
+
+Saving dataset into 'build/data/raw/test-50-2-features.csv'
+
